@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AndoCasino Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <script>
-window.onerror = function(message, source, lineno, colno, error) {
-    alert("🚨 Скрипт упал!\nОшибка: " + message + "\nСтрока: " + lineno);
-    return false;
-};
-    </script>
     <style>
         :root {
             --bg-color: #0d0e12;
@@ -19,10 +12,9 @@ window.onerror = function(message, source, lineno, colno, error) {
             --card-inner: #1b1e26;
             --text-color: #ffffff;
             --text-muted: #6c7284;
-            --accent-color: #00ff87; /* Яркий неоновый зеленый для акцентов */
+            --accent-color: #00ff87;
             --danger-color: #ff3838;
             --gold: #f1c40f;
-            --neon-glow: rgba(0, 255, 135, 0.08);
             --border-color: rgba(255, 255, 255, 0.05);
         }
 
@@ -30,27 +22,54 @@ window.onerror = function(message, source, lineno, colno, error) {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            -webkit-user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 80px;
         }
 
-        /* Контентная зона */
+        header {
+            background: var(--card-bg);
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            background: var(--accent-color);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info h1 {
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+
+        .balance {
+            font-size: 13px;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
         .content-screen {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px 16px;
             display: none;
-            padding-bottom: 100px;
+            padding: 16px;
         }
 
         .content-screen.active {
@@ -58,380 +77,169 @@ window.onerror = function(message, source, lineno, colno, error) {
         }
 
         h2 {
-            margin-bottom: 24px;
             font-size: 20px;
-            text-align: center;
+            margin-bottom: 16px;
             font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #ffffff;
         }
 
-        /* Навигация (вкладки снизу) */
+        .mines-panel {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .btn-action {
+            flex: 1;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 70px;
-            background-color: var(--card-bg);
+            height: 64px;
+            background: rgba(20, 22, 29, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border-top: 1px solid var(--border-color);
-            z-index: 1000;
             padding-bottom: env(safe-area-inset-bottom);
+            z-index: 1000;
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             color: var(--text-muted);
             font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-decoration: none;
+            gap: 4px;
             cursor: pointer;
-            width: 33.3%;
-            height: 100%;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item .icon {
-            font-size: 20px;
-            margin-bottom: 5px;
-            transition: transform 0.2s ease, color 0.2s ease;
+            width: 60px;
         }
 
         .nav-item.active {
-            color: var(--text-color);
-        }
-
-        .nav-item.active .icon {
             color: var(--accent-color);
-            transform: translateY(-2px);
         }
 
-        /* =====================================================================
-           ЭКРАН ПРОФИЛЯ (СТРОГИЙ СТИЛЬ)
-           ===================================================================== */
-        .profile-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .profile-main-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 360px;
-            padding: 24px 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--neon-glow);
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-
-        .profile-username {
+        .nav-icon {
             font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-            color: #ffffff;
-        }
-
-        .balance-badge {
-            background: var(--card-inner);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 16px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .balance-badge::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 100%;
-            background: var(--accent-color);
-        }
-
-        .balance-title {
-            font-size: 10px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .balance-value {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--accent-color);
-            margin-top: 6px;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            margin-top: 16px;
         }
 
         .stat-card {
-            background: var(--card-inner);
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
+            background: var(--card-bg);
             padding: 14px;
-            text-align: left;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 500;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
 
         .stat-val {
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: bold;
             margin-top: 4px;
-            color: #ffffff;
-        }
-
-        /* =====================================================================
-           ЭКРАН ИГРЫ
-           ===================================================================== */
-        .games-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            max-width: 360px;
-            margin: 0 auto;
-        }
-
-        .game-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px 16px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .game-card:active {
-            transform: scale(0.97);
-            border-color: rgba(0, 255, 135, 0.3);
-            background: var(--card-inner);
-        }
-
-        .game-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-            display: inline-block;
-        }
-
-        .game-title {
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.3px;
-        }
-
-        /* =====================================================================
-           ЭКРАН ТОП
-           ===================================================================== */
-        .top-container {
-            max-width: 360px;
-            margin: 0 auto;
-        }
-
-        .top-tabs {
-            display: flex;
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .top-tab-btn {
-            flex: 1;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            padding: 8px 0;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .top-tab-btn.active {
-            background: var(--card-inner);
-            color: var(--accent-color);
-            border: 1px solid rgba(0, 255, 135, 0.15);
-        }
-
-        .leaderboard-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .leader-item {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 12px 16px;
-            border-radius: 12px;
-            justify-content: space-between;
-            border: 1px solid var(--border-color);
-        }
-
-        .leader-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .leader-rank {
-            font-weight: 700;
-            width: 20px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .leader-rank.rank-1 { color: var(--gold); }
-        .leader-rank.rank-2 { color: #dcdde1; }
-        .leader-rank.rank-3 { color: #e67e22; }
-
-        .leader-name {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .leader-score {
-            font-weight: 700;
-            font-size: 14px;
-            color: #ffffff;
         }
     </style>
 </head>
 <body>
 
-    <!-- ЭКРАН ИГРЫ -->
+    <header>
+        <div class="avatar" id="user-avatar">U</div>
+        <div class="user-info">
+            <h1 id="user-name">Загрузка...</h1>
+            <div class="balance" id="user-balance">0 ACoin</div>
+        </div>
+    </header>
+
     <div id="screen-games" class="content-screen active">
-        <h2>Игровые Режимы</h2>
-        <div class="games-grid">
-            <div class="game-card" onclick="alert('Запуск режима Минёр...')">
-                <div class="game-icon">💣</div>
-                <div class="game-title">Mines</div>
+        <h2>Mines Game</h2>
+        <div style="max-width: 360px; margin: 0 auto;">
+            <div class="mines-panel">
+                <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                    <div class="form-group">
+                        <label>СТАВКА (AC)</label>
+                        <input type="number" id="bet-amount" value="10" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>КОЛ-ВО МИН</label>
+                        <select id="mines-count">
+                            <option value="3">3</option>
+                            <option value="5" selected>5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="24">24</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button id="btn-start-game" class="btn-action" onclick="startGame()" style="background: var(--accent-color); color: #000;">ИГРАТЬ</button>
+                    <button id="btn-cashout" class="btn-action" onclick="cashoutGame()" disabled style="background: var(--gold); color: #000; opacity: 0.5;">ЗАБРАТЬ (x1.00)</button>
+                </div>
             </div>
-            <div class="game-card" onclick="alert('Запуск режима Dice...')">
-                <div class="game-icon">🎲</div>
-                <div class="game-title">Dice</div>
-            </div>
-            <div class="game-card" onclick="alert('Запуск режима Слоты...')">
-                <div class="game-icon">🎰</div>
-                <div class="game-title">Slots</div>
-            </div>
-            <div class="game-card" onclick="alert('Запуск Колеса Фортуны...')">
-                <div class="game-icon">🎡</div>
-                <div class="game-title">Wheel</div>
-            </div>
+            <div id="mines-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; background: var(--card-bg); padding: 12px; border-radius: 16px; border: 1px solid var(--border-color); pointer-events: none; opacity: 0.6;"></div>
         </div>
     </div>
 
-    <!-- ЭКРАН ТОП ИГРОКОВ -->
-    <div id="screen-top" class="content-screen">
-        <h2>Топ Лидеров</h2>
-        <div class="top-container">
-            <div class="top-tabs">
-                <button class="top-tab-btn active" onclick="switchTopTab(this, 'day')">День</button>
-                <button class="top-tab-btn" onclick="switchTopTab(this, 'week')">Неделя</button>
-                <button class="top-tab-btn" onclick="switchTopTab(this, 'month')">Месяц</button>
-            </div>
-            
-            <div class="leaderboard-list" id="leaderboard">
-                <div class="leader-item">
-                    <div class="leader-left">
-                        <span class="leader-rank rank-1">1</span>
-                        <span class="leader-name">Donya</span>
-                    </div>
-                    <span class="leader-score">45,200 AC</span>
-                </div>
-                <div class="leader-item">
-                    <div class="leader-left">
-                        <span class="leader-rank rank-2">2</span>
-                        <span class="leader-name">Alex_Bet</span>
-                    </div>
-                    <span class="leader-score">31,000 AC</span>
-                </div>
-                <div class="leader-item">
-                    <div class="leader-left">
-                        <span class="leader-rank rank-3">3</span>
-                        <span class="leader-name">Jennie_Fan</span>
-                    </div>
-                    <span class="leader-score">18,500 AC</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ЭКРАН ПРОФИЛЬ -->
     <div id="screen-profile" class="content-screen">
-        <h2>Личный Кабинет</h2>
-        <div class="profile-container">
-            <div class="profile-main-card">
-                <div class="profile-username" id="user-name">Загрузка...</div>
-                
-                <div class="balance-badge">
-                    <div class="balance-title">Доступный Баланс</div>
-                    <div class="balance-value" id="user-balance">0 ACoin</div>
+        <h2>Мой Профиль</h2>
+        <div style="background: var(--card-bg); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color);">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div style="font-size: 11px; color: var(--text-muted);">ВИНРЕЙТ</div>
+                    <div class="stat-val" id="stat-winrate" style="color: var(--accent-color);">--</div>
                 </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Винрейт</div>
-                        <div class="stat-val" id="stat-winrate">54%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Топ Коэф.</div>
-                        <div class="stat-val" id="stat-max-coef">x14.5</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Макс. Выигрыш</div>
-                        <div class="stat-val" id="stat-max-win">2,500 AC</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Ранг</div>
-                        <div class="stat-val" style="color: var(--accent-color);">Player</div>
-                    </div>
+                <div class="stat-card">
+                    <div style="font-size: 11px; color: var(--text-muted);">МАКС. КОЭФФИЦИЕНТ</div>
+                    <div class="stat-val" id="stat-max-coef" style="color: var(--gold);">--</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- НАВИГАЦИЯ -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('games', this)">
-            <span class="icon">🎮</span>
-            <span>ИГРЫ</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('top', this)">
-            <span class="icon">🏆</span>
-            <span>ТОП</span>
+            <span class="nav-icon">🎮</span><span>Игры</span>
         </div>
         <div class="nav-item" onclick="switchTab('profile', this)">
-            <span class="icon">👤</span>
-            <span>ПРОФИЛЬ</span>
+            <span class="nav-icon">👤</span><span>Профиль</span>
         </div>
     </div>
 
@@ -440,46 +248,135 @@ window.onerror = function(message, source, lineno, colno, error) {
         tg.expand();
 
         const BACKEND_URL = "http://localhost:8080"; 
+        let isGameActive = false;
+        let currentBet = 0;
 
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const user = tg.initDataUnsafe.user;
             document.getElementById('user-name').innerText = user.first_name;
-            
+            document.getElementById('user-avatar').innerText = user.first_name.charAt(0).toUpperCase();
+
             fetch(`${BACKEND_URL}/api/profile/${user.id}`)
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
-                    if(!data.error) {
-                        document.getElementById('user-balance').innerText = `${data.balance.toFixed(0)} ACoin`;
+                    if (data.balance !== undefined) {
+                        updateUIBalance(data.balance);
                         document.getElementById('stat-winrate').innerText = data.winrate;
                         document.getElementById('stat-max-coef').innerText = data.max_coef;
-                        document.getElementById('stat-max-win').innerText = `${data.max_win} AC`;
                     }
-                })
-                .catch(err => console.error("Ошибка API:", err));
-
+                });
         } else {
-            document.getElementById('user-name').innerText = "Тестовый Аккаунт";
-            document.getElementById('user-balance').innerText = "1,000 ACoin";
+            document.getElementById('user-name').innerText = "Тест";
+            updateUIBalance(1000);
+        }
+
+        function initGrid() {
+            const grid = document.getElementById('mines-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.style.cssText = `background: var(--card-inner); aspect-ratio: 1; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.02);`;
+                cell.onclick = () => clickCell(i, cell);
+                grid.appendChild(cell);
+            }
+        }
+        initGrid();
+
+        function startGame() {
+            if (isGameActive) return;
+            currentBet = parseFloat(document.getElementById('bet-amount').value);
+            const minesCount = parseInt(document.getElementById('mines-count').value);
+            const userId = tg.initDataUnsafe?.user?.id || 12345;
+
+            fetch(`${BACKEND_URL}/api/mines/start`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, bet: currentBet, mines: minesCount })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) alert(data.error);
+                else {
+                    isGameActive = true;
+                    initGrid();
+                    document.getElementById('mines-grid').style.pointerEvents = 'auto';
+                    document.getElementById('mines-grid').style.opacity = '1';
+                    document.getElementById('btn-start-game').disabled = true;
+                    document.getElementById('btn-cashout').disabled = false;
+                    document.getElementById('btn-cashout').style.opacity = '1';
+                    document.getElementById('btn-cashout').innerText = `ЗАБРАТЬ (x${data.next_coef.toFixed(2)})`;
+                    updateUIBalance(data.new_balance);
+                }
+            });
+        }
+
+        function clickCell(index, cellElement) {
+            if (!isGameActive || cellElement.dataset.opened === "true") return;
+            const userId = tg.initDataUnsafe?.user?.id || 12345;
+
+            fetch(`${BACKEND_URL}/api/mines/step`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, cell: index })
+            })
+            .then(res => res.json())
+            .then(data => {
+                cellElement.dataset.opened = "true";
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+                if (data.status === "win") {
+                    cellElement.style.background = "rgba(0, 255, 135, 0.15)";
+                    cellElement.innerText = "💎";
+                    if (data.auto_cashout) {
+                        alert("Максимальный выигрыш!");
+                        updateUIBalance(data.new_balance);
+                        endGameSession();
+                    } else {
+                        document.getElementById('btn-cashout').innerText = `ЗАБРАТЬ x${data.next_coef.toFixed(2)}`;
+                    }
+                } else if (data.status === "gameover") {
+                    cellElement.style.background = "rgba(255, 56, 56, 0.2)";
+                    cellElement.innerText = "💥";
+                    data.all_mines.forEach(mIdx => {
+                        const cell = grid.children[mIdx];
+                        if (cell && cell.innerText !== "💥") cell.innerText = "💣";
+                    });
+                    endGameSession();
+                    alert("Бум! Конец игры.");
+                }
+            });
+        }
+
+        function cashoutGame() {
+            const userId = tg.initDataUnsafe?.user?.id || 12345;
+            fetch(`${BACKEND_URL}/api/mines/cashout`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                updateUIBalance(data.new_balance);
+                endGameSession();
+                alert(`Забрали ${data.win_amount.toFixed(0)} ACoin`);
+            });
+        }
+
+        function endGameSession() {
+            isGameActive = false;
+            document.getElementById('mines-grid').style.pointerEvents = 'none';
+            document.getElementById('btn-start-game').disabled = false;
+            document.getElementById('btn-cashout').disabled = true;
+            document.getElementById('btn-cashout').innerText = `ЗАБРАТЬ (x1.00)`;
+        }
+
+        function updateUIBalance(balance) {
+            document.getElementById('user-balance').innerText = `${parseFloat(balance).toFixed(0)} ACoin`;
         }
 
         function switchTab(screenId, element) {
-            document.querySelectorAll('.content-screen').forEach(screen => screen.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.content-screen').forEach(s => s.classList.remove('active'));
             document.getElementById(`screen-${screenId}`).classList.add('active');
-            element.classList.add('active');
-            
-            if (tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('light');
-            }
-        }
-
-        function switchTopTab(btn, timeFrame) {
-            document.querySelectorAll('.top-tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            if (tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('light');
-            }
         }
     </script>
 </body>

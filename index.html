@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AndoCasino Premium</title>
+    <title>ABet Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
         :root {
-            --bg-color: #0b0c10;
-            --card-bg: #141722;
-            --card-inner: #1f2330;
+            --bg-color: #08090c;
+            --card-bg: #11141e;
+            --card-inner: #181c2b;
             --text-color: #ffffff;
-            --text-muted: #787f95;
+            --text-muted: #646c80;
             --accent-color: #00ff87; 
-            --crash-color: #ff3860;
-            --gold: #f1c40f;
-            --neon-glow: rgba(0, 255, 135, 0.08);
-            --border-color: rgba(255, 255, 255, 0.06);
+            --crash-color: #ff3355;
+            --gold: #ffb800;
+            --border-color: rgba(255, 255, 255, 0.04);
+            --glow-accent: rgba(0, 255, 137, 0.2);
+            --glow-crash: rgba(255, 51, 85, 0.25);
         }
 
         * {
@@ -41,219 +42,231 @@
         .content-screen {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 16px;
+            padding: 16px;
             display: none;
-            padding-bottom: 100px;
+            padding-bottom: 90px;
         }
 
         .content-screen.active {
             display: block;
         }
 
-        h2 {
-            margin-bottom: 20px;
-            font-size: 18px;
-            text-align: center;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #ffffff;
-            opacity: 0.9;
-        }
-
-        /* КРАСИВОЕ НОВОЕ МЕНЮ ВЫБОРА */
-        .menu-banner {
-            background: linear-gradient(135deg, #1f2330 0%, #141722 100%);
-            border-radius: 20px;
-            padding: 20px;
+        /* ДИЗАЙН ГЛАВНОГО МЕНЮ АВЕТ */
+        .brand-header {
+            background: linear-gradient(145deg, #131723 0%, #0b0d14 100%);
+            border-radius: 24px;
+            padding: 24px;
             margin-bottom: 20px;
             text-align: center;
             border: 1px solid var(--border-color);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
-        .menu-banner h1 {
-        font-size: 22px;
-        font-weight: 800;
-    background: linear-gradient(90deg, #fff, var(--accent-color));
-        -webkit-background-clip: text;
-        background-clip: text; /* Добавили стандартное свойство */
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 6px;
-}
+        .brand-header h1 {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #ffffff 30%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
 
-        .menu-banner p {
-            font-size: 12px;
+        .brand-header p {
+            font-size: 11px;
             color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .games-layout {
             display: flex;
             flex-direction: column;
             gap: 14px;
-            max-width: 360px;
+            max-width: 380px;
             margin: 0 auto;
         }
 
         .premium-card {
             position: relative;
-            background: var(--card-bg);
-            border-radius: 18px;
-            padding: 20px;
+            background: linear-gradient(90deg, var(--card-bg) 0%, #151926 100%);
+            border-radius: 20px;
+            padding: 22px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border: 1px solid var(--border-color);
             cursor: pointer;
             overflow: hidden;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: all 0.2s ease;
         }
 
         .premium-card:active {
-            transform: scale(0.98);
-            border-color: var(--accent-color);
+            transform: scale(0.97);
         }
 
         .premium-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 4px; height: 100%;
+            top: 0; left: 0; width: 5px; height: 100%;
         }
 
-        .card-mines::before { background: var(--accent-color); }
-        .card-crash::before { background: var(--crash-color); }
+        .card-mines::before { background: var(--accent-color); box-shadow: 4px 0 15px var(--glow-accent); }
+        .card-crash::before { background: var(--crash-color); box-shadow: 4px 0 15px var(--glow-crash); }
+
+        .premium-card:hover, .premium-card:active {
+            border-color: rgba(255,255,255,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
 
         .card-info {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
             text-align: left;
         }
 
-        .card-title {
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .card-desc {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
+        .card-title { font-size: 19px; font-weight: 800; letter-spacing: 0.5px; }
+        .card-desc { font-size: 11px; color: var(--text-muted); }
         .card-badge {
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 6px;
-            background: rgba(255,255,255,0.05);
-            font-weight: 600;
-            align-self: flex-start;
-            margin-top: 4px;
-            text-transform: uppercase;
+            font-size: 9px; padding: 3px 8px; border-radius: 6px;
+            background: rgba(255,255,255,0.04); font-weight: 700;
+            align-self: flex-start; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px;
         }
-
         .card-mines .card-badge { color: var(--accent-color); }
         .card-crash .card-badge { color: var(--crash-color); }
+        .card-big-icon { font-size: 38px; opacity: 0.9; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
 
-        .card-big-icon {
-            font-size: 40px;
-            opacity: 0.8;
+        /* ИГРОВЫЕ ЭКРАНЫ */
+        .game-wrapper { max-width: 380px; margin: 0 auto; }
+        
+        .game-header-bar {
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 16px; background: var(--card-bg); padding: 10px 16px; 
+            border-radius: 14px; border: 1px solid var(--border-color);
         }
 
-        /* ОБЩИЙ ИГРОВОЙ КОНТЕЙНЕР */
         .game-container {
-            max-width: 360px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            background: var(--card-bg); border-radius: 24px; padding: 14px;
+            border: 1px solid var(--border-color); box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        /* ИНТЕРФЕЙС КРАША */
-        .crash-area {
-            position: relative;
-            height: 180px;
-            background: #090a0e;
-            border-radius: 14px;
-            margin-bottom: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.02);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* КРАСИВАЯ АРЕНА КРАША */
+        .crash-canvas-area {
+            position: relative; height: 190px; background: #06070a;
+            border-radius: 18px; margin-bottom: 12px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.015);
+            display: flex; align-items: center; justify-content: center;
         }
 
         .crash-grid-lines {
-            position: absolute;
-            width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 20px 20px;
+            position: absolute; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+            background-size: 24px 24px;
         }
 
         #crash-multiplier-display {
-            font-size: 38px;
-            font-weight: 900;
-            z-index: 10;
-            transition: color 0.2s;
+            font-size: 46px; font-weight: 900; z-index: 10;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8); font-variant-numeric: tabular-nums;
         }
 
-        #plane-icon {
-            position: absolute;
-            font-size: 32px;
-            bottom: 20px;
-            left: 20px;
-            z-index: 5;
-            transition: transform 0.1s linear, left 0.1s linear, bottom 0.1s linear;
-            display: none;
+        /* Реалистичный самолетик / ракета со шлейфом пламени */
+        #plane-wrapper {
+            position: absolute; bottom: 20px; left: 20px; z-index: 5;
+            display: none; transform: translate(-50%, 50%); will-change: left, bottom;
+        }
+
+        .plane-object {
+            font-size: 28px; transform: rotate(15deg); display: inline-block;
+            position: relative; animation: planeWobble 0.4s infinite alternate ease-in-out;
+        }
+
+        /* Инверсионный неоновый след сзади самолета */
+        .plane-trail {
+            position: absolute; right: 15px; top: 15px;
+            width: 80px; height: 8px;
+            background: linear-gradient(90deg, transparent, rgba(255, 51, 85, 0.4));
+            border-radius: 50%; filter: blur(3px); transform: rotate(-15deg);
+            transform-origin: right center;
+        }
+
+        @keyframes planeWobble {
+            0% { transform: rotate(12deg) translateY(0px); }
+            100% { transform: rotate(17deg) translateY(-3px); }
         }
 
         .crash-motivation-banner {
-            min-height: 34px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--gold);
-            margin-bottom: 12px;
-            padding: 4px;
+            background: rgba(255,255,255,0.02); border-radius: 10px;
+            text-align: center; font-size: 11px; font-weight: 700;
+            color: var(--gold); padding: 8px; margin-bottom: 12px;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
+
+        /* ДВУХЭТАЖНЫЕ ПАНЕЛИ СТАВОК (Верхняя и Нижняя) */
+        .bet-panels-container { display: flex; flex-direction: column; gap: 12px; }
+        
+        .bet-panel {
+            background: var(--card-inner); border-radius: 16px; padding: 12px;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .bet-panel-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+        }
+        .panel-label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        
+        /* Переключатель автоигры */
+        .auto-toggle-container { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .auto-checkbox {
+            width: 14px; height: 14px; border: 1px solid var(--text-muted);
+            border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px;
+        }
+        .auto-checkbox.checked { background: var(--accent-color); border-color: var(--accent-color); color: #000; }
+        .auto-checkbox::after { content: '✓'; display: none; }
+        .auto-checkbox.checked::after { display: block; }
+
+        .bet-input-row { display: flex; gap: 8px; }
+        .bet-input-row input {
+            flex: 1; background: #0c0e15; border: 1px solid var(--border-color);
+            color: white; padding: 10px 12px; border-radius: 8px; outline: none;
+            font-weight: 700; font-size: 13px;
+        }
+
+        .auto-settings { display: none; gap: 4px; align-items: center; margin-top: 6px; }
+        .auto-settings.active { display: flex; }
+        .auto-settings span { font-size: 10px; color: var(--text-muted); }
+        .auto-settings input { width: 70px; padding: 6px; font-size: 11px; text-align: center; }
+
+        .btn-bet-action {
+            background: var(--crash-color); color: white; border: none;
+            padding: 10px 18px; border-radius: 8px; font-weight: 800;
+            font-size: 12px; text-transform: uppercase; cursor: pointer; min-width: 100px;
+            transition: background 0.2s;
+        }
+        .btn-bet-action.cashed { background: rgba(0, 255, 137, 0.15) !important; color: var(--accent-color) !important; pointer-events: none; }
+        .btn-bet-action.waiting { background: #3b4257 !important; color: white !important; }
 
         /* ИНТЕРФЕЙС МИН */
-        .mines-info-panel {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            background: var(--card-inner);
-            padding: 12px;
-            border-radius: 12px;
-        }
-
-        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 16px; }
-        .mines-cell { aspect-ratio: 1; background: var(--card-inner); border: 1px solid rgba(255,255,255,0.02); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: all 0.2s; }
-        .mines-cell.opened-gem { background: rgba(0, 255, 135, 0.12); border-color: var(--accent-color); }
-        .mines-cell.opened-mine { background: rgba(255, 56, 96, 0.12); border-color: var(--crash-color); }
+        .mines-info-panel { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--card-inner); padding: 10px; border-radius: 12px; }
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 12px; }
+        .mines-cell { aspect-ratio: 1; background: var(--card-inner); border: 1px solid rgba(255,255,255,0.015); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: all 0.15s; }
+        .mines-cell.opened-gem { background: rgba(0, 255, 137, 0.1); border-color: var(--accent-color); }
+        .mines-cell.opened-mine { background: rgba(255, 51, 85, 0.1); border-color: var(--crash-color); }
         .mines-cell.disabled { pointer-events: none; }
+        .mines-ctrl-btn { background: var(--accent-color); color: black; border: none; width: 100%; padding: 14px; border-radius: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
 
-        /* ПАНЕЛЬ УПРАВЛЕНИЯ СТАВКАМИ */
-        .controls-box { display: flex; flex-direction: column; gap: 10px; }
-        .input-row { display: flex; gap: 8px; }
-        .input-row input, .input-row select { flex: 1; background: var(--card-inner); border: 1px solid var(--border-color); color: white; padding: 12px; border-radius: 10px; outline: none; font-weight: 600; font-size: 14px; }
-        
-        .btn-main { background: var(--accent-color); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
-        .btn-main:disabled { background: var(--text-muted); cursor: not-allowed; }
-        
-        /* НАВИГАЦИЯ НИЖНЯЯ */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background-color: var(--card-bg); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--border-color); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 10px; font-weight: 600; text-decoration: none; cursor: pointer; width: 33.3%; height: 100%; }
+        /* НИЖНЕЕ МЕНЮ НАВИГАЦИИ */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 68px; background-color: var(--card-bg); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--border-color); z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 10px; font-weight: 700; text-decoration: none; cursor: pointer; width: 33.3%; height: 100%; letter-spacing: 0.5px; }
         .nav-item .icon { font-size: 18px; margin-bottom: 4px; }
         .nav-item.active { color: var(--text-color); }
         .nav-item.active .icon { color: var(--accent-color); }
 
-        /* ПРОФИЛЬ И ТОП */
-        .top-container { max-width: 360px; margin: 0 auto; }
+        /* ЛИДЕРБОРД И ПРОФИЛЬ */
+        .top-container { max-width: 380px; margin: 0 auto; }
         .top-tabs { display: flex; background: var(--card-bg); border-radius: 12px; padding: 4px; margin-bottom: 16px; border: 1px solid var(--border-color); }
         .top-tab-btn { flex: 1; background: none; border: none; color: var(--text-muted); padding: 8px 0; font-size: 12px; font-weight: 600; border-radius: 8px; }
         .top-tab-btn.active { background: var(--card-inner); color: var(--accent-color); }
@@ -264,17 +277,17 @@
         .leader-rank.rank-1 { color: var(--gold); }
         .leader-name { font-size: 14px; font-weight: 500; }
         .leader-score { font-weight: 700; font-size: 14px; }
-        .profile-container { display: flex; flex-direction: column; align-items: center; width: 100%; }
-        .profile-main-card { background: var(--card-bg); border-radius: 20px; width: 100%; max-width: 360px; padding: 24px 20px; text-align: center; border: 1px solid var(--border-color); }
-        .profile-username { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #ffffff; }
+        
+        .profile-main-card { background: var(--card-bg); border-radius: 24px; width: 100%; max-width: 380px; padding: 24px 20px; text-align: center; border: 1px solid var(--border-color); margin: 0 auto; }
+        .profile-username { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
         .balance-badge { background: var(--card-inner); padding: 16px; border-radius: 16px; margin-bottom: 24px; position: relative; }
         .balance-badge::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent-color); }
-        .balance-title { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
-        .balance-value { font-size: 24px; font-weight: 800; color: var(--accent-color); margin-top: 6px; }
+        .balance-title { font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
+        .balance-value { font-size: 26px; font-weight: 900; color: var(--accent-color); margin-top: 4px; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .stat-card { background: var(--card-inner); border-radius: 12px; padding: 14px; text-align: left; }
-        .stat-label { font-size: 11px; color: var(--text-muted); }
-        .stat-val { font-size: 14px; font-weight: 700; margin-top: 4px; }
+        .stat-label { font-size: 10px; color: var(--text-muted); }
+        .stat-val { font-size: 14px; font-weight: 800; margin-top: 4px; }
     </style>
 </head>
 <body>
@@ -282,93 +295,139 @@
     <!-- ЭКРАН ИГРЫ -->
     <div id="screen-games" class="content-screen active">
         
-        <!-- НОВОЕ СТИЛЬНОЕ ГЛАВНОЕ МЕНЮ -->
+        <!-- ГЛАВНОЕ МЕНЮ ABET -->
         <div id="modes-selection">
-            <div class="menu-banner">
-                <h1>AndoCasino Premium</h1>
-                <p>Выбирай режим и забирай куш</p>
+            <div class="brand-header">
+                <h1>ABet</h1>
+                <p>Premium Gaming Platform</p>
             </div>
             
             <div class="games-layout">
-                <!-- Карточка Мин -->
-                <div class="premium-card card-mines" onclick="openMinesGame()">
-                    <div class="card-info">
-                        <span class="card-title">Mines</span>
-                        <span class="card-desc">Ищи алмазы, обходи скрытые мины</span>
-                        <span class="card-badge">РТП 95%</span>
-                    </div>
-                    <div class="card-big-icon">💎</div>
-                </div>
-
                 <!-- Карточка Краша -->
                 <div class="premium-card card-crash" onclick="openCrashGame()">
                     <div class="card-info">
-                        <span class="card-title">Lucky Jet</span>
-                        <span class="card-desc">Успей забрать куш, пока самолет летит</span>
-                        <span class="card-badge">Новое</span>
+                        <span class="card-title">Lucky Jet 2.0</span>
+                        <span class="card-desc">Двойные ставки, авто-вывод, шлейф</span>
+                        <span class="card-badge">Топ режим</span>
                     </div>
                     <div class="card-big-icon">🚀</div>
                 </div>
-            </div>
-        </div>
 
-        <!-- ОКНО ИГРЫ: МИНЫ -->
-        <div id="mines-game-screen" style="display: none;">
-            <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 15px;">
-                <button onclick="closeMinesGame()" style="background:none; border:none; color:var(--accent-color); font-weight:600; cursor:pointer;">← Назад</button>
-                <span style="font-weight:700; text-transform:uppercase; font-size:14px;">Mines Mode</span>
-            </div>
-
-            <div class="game-container">
-                <div class="mines-info-panel">
-                    <div>
-                        <div style="font-size:10px; color:var(--text-muted)">МНОЖИТЕЛЬ</div>
-                        <div id="mines-current-coef" style="font-size:20px; font-weight:800; color:var(--accent-color)">x0.00</div>
+                <!-- Карточка Мин -->
+                <div class="premium-card card-mines" onclick="openMinesGame()">
+                    <div class="card-info">
+                        <span class="card-title">Mines Classic</span>
+                        <span class="card-desc">Чисти поле, лови максимальные иксы</span>
+                        <span class="card-badge">РТП 95%</span>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-size:10px; color:var(--text-muted)">ПРИБЫЛЬ</div>
-                        <div id="mines-current-profit" style="font-size:20px; font-weight:800; color:var(--gold)">0 AC</div>
-                    </div>
-                </div>
-                <div class="mines-grid" id="mines-board"></div>
-                <div class="controls-box">
-                    <div class="input-row">
-                        <input type="number" id="mines-bet" value="100" min="10">
-                        <select id="mines-count">
-                            <option value="3">3 мины</option>
-                            <option value="5" selected>5 мин</option>
-                            <option value="10">10 мин</option>
-                        </select>
-                    </div>
-                    <button class="btn-main" id="btn-mines-action" onclick="handleMinesAction()">Играть</button>
+                    <div class="card-big-icon">💎</div>
                 </div>
             </div>
         </div>
 
         <!-- ОКНО ИГРЫ: КРАШ (САМОЛЕТИК) -->
         <div id="crash-game-screen" style="display: none;">
-            <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 15px;">
-                <button onclick="closeCrashGame()" style="background:none; border:none; color:var(--crash-color); font-weight:600; cursor:pointer;">← Назад</button>
-                <span style="font-weight:700; text-transform:uppercase; font-size:14px;">Crash Mode</span>
+            <div class="game-header-bar">
+                <button onclick="closeCrashGame()" style="background:none; border:none; color:var(--crash-color); font-weight:700; cursor:pointer; font-size:13px;">← Назад</button>
+                <span style="font-weight:800; font-size:13px; letter-spacing:1px; color:var(--text-muted);">LUCKY JET</span>
             </div>
 
-            <div class="game-container">
-                <div class="crash-area">
-                    <div class="crash-grid-lines"></div>
-                    <div id="crash-multiplier-display">x1.00</div>
-                    <div id="plane-icon">🚀</div>
-                </div>
-
-                <!-- Мотивационное поле под графиком -->
-                <div class="crash-motivation-banner" id="crash-motivation">
-                    Приготовьтесь к взлету!
-                </div>
-
-                <div class="controls-box">
-                    <div class="input-row">
-                        <input type="number" id="crash-bet" value="100" min="10" placeholder="Ставка">
+            <div class="game-wrapper">
+                <div class="game-container">
+                    <!-- Арена полета -->
+                    <div class="crash-canvas-area">
+                        <div class="crash-grid-lines"></div>
+                        <div id="crash-multiplier-display" style="color: white;">x1.00</div>
+                        
+                        <!-- Самолетик с анимацией пламени -->
+                        <div id="plane-wrapper">
+                            <div class="plane-trail"></div>
+                            <div class="plane-object">🚀</div>
+                        </div>
                     </div>
-                    <button class="btn-main" id="btn-crash-action" onclick="handleCrashAction()" style="background: var(--crash-color); color: white;">Взлет</button>
+
+                    <!-- Лента информации / Упущенная выгода -->
+                    <div class="crash-motivation-banner" id="crash-motivation">
+                        Ожидание ставки...
+                    </div>
+
+                    <!-- ДВЕ НЕЗАВИСИМЫЕ ПАНЕЛИ СТАВОК -->
+                    <div class="bet-panels-container">
+                        
+                        <!-- СТАВКА 1 (ВЕРХНЯЯ) -->
+                        <div class="bet-panel" id="panel-1">
+                            <div class="bet-panel-header">
+                                <span class="panel-label">Ставка Верхняя</span>
+                                <div class="auto-toggle-container" onclick="toggleAuto(1)">
+                                    <div class="auto-checkbox" id="auto-check-1"></div>
+                                    <span class="panel-label" style="font-size:9px;">Авто-вывод</span>
+                                </div>
+                            </div>
+                            <div class="bet-input-row">
+                                <input type="number" id="crash-bet-1" value="100" min="10">
+                                <button class="btn-bet-action" id="btn-crash-1" onclick="placeCrashBet(1)">Взлет</button>
+                            </div>
+                            <div class="auto-settings" id="auto-settings-1">
+                                <span>Коэффициент:</span>
+                                <input type="number" id="auto-coef-1" value="2.0" step="0.1" min="1.1">
+                            </div>
+                        </div>
+
+                        <!-- СТАВКА 2 (НИЖНЯЯ) -->
+                        <div class="bet-panel" id="panel-2">
+                            <div class="bet-panel-header">
+                                <span class="panel-label">Ставка Нижняя</span>
+                                <div class="auto-toggle-container" onclick="toggleAuto(2)">
+                                    <div class="auto-checkbox" id="auto-check-2"></div>
+                                    <span class="panel-label" style="font-size:9px;">Авто-вывод</span>
+                                </div>
+                            </div>
+                            <div class="bet-input-row">
+                                <input type="number" id="crash-bet-2" value="50" min="10">
+                                <button class="btn-bet-action" id="btn-crash-2" onclick="placeCrashBet(2)">Взлет</button>
+                            </div>
+                            <div class="auto-settings" id="auto-settings-2">
+                                <span>Коэффициент:</span>
+                                <input type="number" id="auto-coef-2" value="1.5" step="0.1" min="1.1">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ОКНО ИГРЫ: МИНЫ -->
+        <div id="mines-game-screen" style="display: none;">
+            <div class="game-header-bar">
+                <button onclick="closeMinesGame()" style="background:none; border:none; color:var(--accent-color); font-weight:700; cursor:pointer; font-size:13px;">← Назад</button>
+                <span style="font-weight:800; font-size:13px; color:var(--text-muted);">MINES BOARD</span>
+            </div>
+
+            <div class="game-wrapper">
+                <div class="game-container">
+                    <div class="mines-info-panel">
+                        <div>
+                            <div style="font-size:9px; color:var(--text-muted); font-weight:800;">МНОЖИТЕЛЬ</div>
+                            <div id="mines-current-coef" style="font-size:18px; font-weight:900; color:var(--accent-color)">x0.00</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size:9px; color:var(--text-muted); font-weight:800;">ВЫИГРЫШ</div>
+                            <div id="mines-current-profit" style="font-size:18px; font-weight:900; color:var(--gold)">0 AC</div>
+                        </div>
+                    </div>
+                    <div class="mines-grid" id="mines-board"></div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; gap: 6px;">
+                            <input type="number" id="mines-bet" value="100" min="10" style="flex:1; background:#0c0e15; border:1px solid var(--border-color); color:white; padding:12px; border-radius:10px; font-weight:700;">
+                            <select id="mines-count" style="width:110px; background:#0c0e15; border:1px solid var(--border-color); color:white; padding:12px; border-radius:10px; font-weight:700;">
+                                <option value="3">3 мины</option>
+                                <option value="5" selected>5 мин</option>
+                                <option value="10">10 мин</option>
+                            </select>
+                        </div>
+                        <button class="mines-ctrl-btn" id="btn-mines-action" onclick="handleMinesAction()">Играть</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -422,29 +481,254 @@
         let balance = 1000;
         let maxCoef = 1.0;
 
-        // СОСТОЯНИЕ МИН
-        let minesActive = false;
-        let minesPos = [];
-        let openedCells = 0;
-        let curMinesBet = 0;
-        let curMinesCount = 5;
-
         // СОСТОЯНИЕ КРАША
         let crashActive = false;
         let crashState = "idle"; // idle, flying, crashed
         let currentCoef = 1.00;
         let targetCrashPoint = 1.00;
-        let crashLoopInterval = null;
-        let curCrashBet = 0;
-        let playerCashedOut = false;
-        let playerWinAmount = 0;
-        let finalCashedCoef = 0;
+        let crashInterval = null;
+
+        // Структура для двух ставок
+        let bets = {
+            1: { active: false, betValue: 0, cashedOut: false, winAmount: 0, auto: false, autoCoef: 2.0 },
+            2: { active: false, betValue: 0, cashedOut: false, winAmount: 0, auto: false, autoCoef: 1.5 }
+        };
+
+        // СОСТОЯНИЕ МИН
+        let minesActive = false; let minesPos = []; let openedCells = 0; let curMinesBet = 0; let curMinesCount = 5;
 
         function updateBalanceUI() {
             document.getElementById('user-balance').innerText = `${balance.toLocaleString()} ACoin`;
         }
 
-        // --- МАТЕМАТИКА И ЛОГИКА МИН ---
+        /* --- КРАШ СИСТЕМА (LUCKY JET 2.0) --- */
+        function openCrashGame() {
+            document.getElementById('modes-selection').style.display = 'none';
+            document.getElementById('crash-game-screen').style.display = 'block';
+            resetCrashArena();
+        }
+
+        function closeCrashGame() {
+            if (crashActive) return alert('Дождитесь завершения полета!');
+            document.getElementById('crash-game-screen').style.display = 'none';
+            document.getElementById('modes-selection').style.display = 'block';
+        }
+
+        function toggleAuto(panelId) {
+            if (crashActive) return;
+            bets[panelId].auto = !bets[panelId].auto;
+            const checkbox = document.getElementById(`auto-check-${panelId}`);
+            const settings = document.getElementById(`auto-settings-${panelId}`);
+            
+            if (bets[panelId].auto) {
+                checkbox.classList.add('checked');
+                settings.classList.add('active');
+            } else {
+                checkbox.classList.remove('checked');
+                settings.classList.remove('active');
+            }
+            triggerHaptic();
+        }
+
+        function resetCrashArena() {
+            document.getElementById('crash-multiplier-display').innerText = 'x1.00';
+            document.getElementById('crash-multiplier-display').style.color = '#ffffff';
+            document.getElementById('crash-motivation').innerText = 'Сделайте ставки и нажмите Взлет';
+            document.getElementById('crash-motivation').style.color = 'var(--gold)';
+            
+            const plane = document.getElementById('plane-wrapper');
+            plane.style.display = 'none';
+            plane.style.left = '20px';
+            plane.style.bottom = '20px';
+        }
+
+        function generateCrashPoint() {
+            let e = Math.random();
+            if (e < 0.02) return 1.00; // 2% мгновенный краш
+            return parseFloat((0.98 / (1 - Math.random())).toFixed(2));
+        }
+
+        function placeCrashBet(panelId) {
+            const btn = document.getElementById(`btn-crash-${panelId}`);
+            
+            // Если игра уже летит — это КЭШАУТ
+            if (crashState === "flying") {
+                if (bets[panelId].active && !bets[panelId].cashedOut) {
+                    executeCashout(panelId);
+                }
+                return;
+            }
+
+            // Иначе — подготовка/отмена ставки перед взлетом
+            const betInput = document.getElementById(`crash-bet-${panelId}`);
+            const val = parseInt(betInput.value);
+
+            if (!bets[panelId].active) {
+                if (isNaN(val) || val < 10 || val > balance) return alert('Недостаточно баланса или неверная ставка!');
+                
+                balance -= val;
+                updateBalanceUI();
+
+                bets[panelId].active = true;
+                bets[panelId].betValue = val;
+                bets[panelId].cashedOut = false;
+                
+                btn.innerText = 'Отмена';
+                btn.style.background = '#3b4257';
+                
+                // Проверяем авто-коэффициент
+                if (bets[panelId].auto) {
+                    bets[panelId].autoCoef = parseFloat(document.getElementById(`auto-coef-${panelId}`).value) || 2.0;
+                }
+
+                // Запускаем общий цикл игры, если никто еще не запустил
+                if (!crashActive) {
+                    startGlobalCrash();
+                }
+            } else {
+                // Отмена ставки до взлета
+                balance += bets[panelId].betValue;
+                updateBalanceUI();
+                bets[panelId].active = false;
+                btn.innerText = 'Взлет';
+                btn.style.background = 'var(--crash-color)';
+            }
+            triggerHaptic();
+        }
+
+        function startGlobalCrash() {
+            crashActive = true;
+            crashState = "flying";
+            currentCoef = 1.00;
+            targetCrashPoint = generateCrashPoint();
+
+            // Блокируем вводы и меняем кнопки активных участников на "ЗАБРАТЬ"
+            for (let i = 1; i <= 2; i++) {
+                document.getElementById(`crash-bet-${i}`).disabled = true;
+                document.getElementById(`auto-coef-${i}`).disabled = true;
+                const btn = document.getElementById(`btn-crash-${i}`);
+                if (bets[i].active) {
+                    btn.innerText = 'Забрать';
+                    btn.style.background = 'var(--gold)';
+                    btn.style.color = '#000';
+                } else {
+                    btn.innerText = 'Летит...';
+                    btn.style.background = '#181c2b';
+                    btn.style.color = 'var(--text-muted)';
+                    btn.disabled = true;
+                }
+            }
+
+            const plane = document.getElementById('plane-wrapper');
+            plane.style.display = 'block';
+            document.getElementById('crash-motivation').innerText = 'Ракета набирает высоту...';
+            document.getElementById('crash-motivation').style.color = 'var(--text-muted)';
+
+            let startTime = Date.now();
+
+            crashInterval = setInterval(() => {
+                let elapsed = (Date.now() - startTime) / 1000;
+                
+                // Средняя, комфортная скорость
+                currentCoef = parseFloat((1.00 + Math.pow(elapsed, 1.25) * 0.07).toFixed(2));
+
+                // Плавное движение по экрану
+                let posX = 20 + (elapsed * 16);
+                let posY = 20 + (Math.pow(elapsed, 1.1) * 9);
+                if (posX > 280) posX = 280;
+                if (posY > 130) posY = 130;
+
+                plane.style.left = `${posX}px`;
+                plane.style.bottom = `${posY}px`;
+
+                // Проверка авто-вывода
+                for (let i = 1; i <= 2; i++) {
+                    if (bets[i].active && bets[i].auto && !bets[i].cashedOut && currentCoef >= bets[i].autoCoef) {
+                        if (bets[i].autoCoef <= targetCrashPoint) {
+                            currentCoef = bets[i].autoCoef; // Фиксируем точный автоикс
+                            executeCashout(i);
+                        }
+                    }
+                }
+
+                if (currentCoef >= targetCrashPoint) {
+                    currentCoef = targetCrashPoint;
+                    executeCrash();
+                } else {
+                    document.getElementById('crash-multiplier-display').innerText = `x${currentCoef.toFixed(2)}`;
+                }
+            }, 50);
+        }
+
+        function executeCashout(panelId) {
+            bets[panelId].cashedOut = true;
+            let exactCoef = currentCoef;
+            bets[panelId].winAmount = Math.floor(bets[panelId].betValue * exactCoef);
+            
+            balance += bets[panelId].winAmount;
+            updateBalanceUI();
+
+            if (exactCoef > maxCoef) {
+                maxCoef = exactCoef;
+                document.getElementById('profile-max-coef').innerText = `x${maxCoef}`;
+            }
+
+            const btn = document.getElementById(`btn-crash-${panelId}`);
+            btn.innerText = `x${exactCoef.toFixed(2)} Успешно`;
+            btn.className = "btn-bet-action cashed";
+
+            document.getElementById('crash-motivation').innerText = `Панель ${panelId} забрала ${bets[panelId].winAmount} AC!`;
+            document.getElementById('crash-motivation').style.color = 'var(--accent-color)';
+            triggerHaptic();
+        }
+
+        function executeCrash() {
+            clearInterval(crashInterval);
+            crashState = "crashed";
+
+            document.getElementById('crash-multiplier-display').innerText = `💥 Сгорел x${targetCrashPoint.toFixed(2)}`;
+            document.getElementById('crash-multiplier-display').style.color = 'var(--crash-color)';
+
+            // Текст упущенной выгоды
+            let summaryText = "";
+            for (let i = 1; i <= 2; i++) {
+                if (bets[i].active) {
+                    if (bets[i].cashedOut) {
+                        let potential = Math.floor(bets[i].betValue * targetCrashPoint);
+                        let lost = potential - bets[i].winAmount;
+                        if (lost > 0) summaryText += `П${i}: могли заработать на ${lost} AC больше! `;
+                    } else {
+                        summaryText += `П${i}: Пригода упущена! `;
+                    }
+                }
+            }
+
+            document.getElementById('crash-motivation').innerText = summaryText || `Ракета взорвалась на x${targetCrashPoint.toFixed(2)}`;
+            document.getElementById('crash-motivation').style.color = summaryText ? 'var(--gold)' : 'var(--crash-color)';
+
+            setTimeout(() => {
+                resetCrashArena();
+                crashActive = false;
+                crashState = "idle";
+
+                for (let i = 1; i <= 2; i++) {
+                    bets[i].active = false;
+                    bets[i].cashedOut = false;
+                    
+                    const btn = document.getElementById(`btn-crash-${i}`);
+                    btn.disabled = false;
+                    btn.className = "btn-bet-action";
+                    btn.innerText = "Взлет";
+                    btn.style.background = 'var(--crash-color)';
+                    btn.style.color = 'white';
+
+                    document.getElementById(`crash-bet-${i}`).disabled = false;
+                    document.getElementById(`auto-coef-${i}`).disabled = false;
+                }
+            }, 3000);
+        }
+
+        /* --- МИНЫ СИСТЕМА --- */
         function getMinesCoef(mines, opened) {
             let n = 25; let p = 1;
             for (let i = 0; i < opened; i++) p *= (n - mines - i) / (n - i);
@@ -452,13 +736,10 @@
         }
 
         function createMinesBoard() {
-            const board = document.getElementById('mines-board');
-            board.innerHTML = '';
+            const board = document.getElementById('mines-board'); board.innerHTML = '';
             for (let i = 0; i < 25; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'mines-cell';
-                cell.innerHTML = '❓';
-                cell.onclick = () => clickMinesCell(cell, i);
+                const cell = document.createElement('div'); cell.className = 'mines-cell';
+                cell.innerHTML = '❓'; cell.onclick = () => clickMinesCell(cell, i);
                 board.appendChild(cell);
             }
         }
@@ -467,12 +748,10 @@
             document.getElementById('modes-selection').style.display = 'none';
             document.getElementById('mines-game-screen').style.display = 'block';
             createMinesBoard();
-            document.getElementById('mines-current-coef').innerText = 'x0.00';
-            document.getElementById('mines-current-profit').innerText = '0 AC';
         }
 
         function closeMinesGame() {
-            if (minesActive) return alert('Закончите игру!');
+            if (minesActive) return alert('Завершите раунд в минах!');
             document.getElementById('mines-game-screen').style.display = 'none';
             document.getElementById('modes-selection').style.display = 'block';
         }
@@ -480,12 +759,11 @@
         function handleMinesAction() {
             const btn = document.getElementById('btn-mines-action');
             if (!minesActive) {
-                const betInput = document.getElementById('mines-bet');
-                const betValue = parseInt(betInput.value);
-                if (isNaN(betValue) || betValue < 10 || betValue > balance) return alert('Проверьте ставку!');
+                const betVal = parseInt(document.getElementById('mines-bet').value);
+                if (isNaN(betVal) || betVal < 10 || betVal > balance) return alert('Ошибка ставки!');
 
-                balance -= betValue; updateBalanceUI();
-                minesActive = true; curMinesBet = betValue;
+                balance -= betVal; updateBalanceUI();
+                minesActive = true; curMinesBet = betVal;
                 curMinesCount = parseInt(document.getElementById('mines-count').value);
                 openedCells = 0; minesPos = [];
 
@@ -493,9 +771,7 @@
                     let r = Math.floor(Math.random() * 25);
                     if (!minesPos.includes(r)) minesPos.push(r);
                 }
-
                 createMinesBoard();
-                betInput.disabled = true; document.getElementById('mines-count').disabled = true;
                 btn.innerText = 'Забрать'; btn.style.background = 'var(--gold)';
                 document.getElementById('mines-current-coef').innerText = 'x1.00';
                 document.getElementById('mines-current-profit').innerText = `${curMinesBet} AC`;
@@ -504,21 +780,17 @@
                 let coef = parseFloat(getMinesCoef(curMinesCount, openedCells));
                 let win = Math.floor(curMinesBet * coef);
                 balance += win; updateBalanceUI();
-                if (coef > maxCoef) { maxCoef = coef; document.getElementById('profile-max-coef').innerText = `x${maxCoef}`; }
-                alert(`Выигрыш: ${win} ACoin!`);
-                endMinesGame(true);
+                alert(`Забрано: ${win} ACoin`);
+                endMinesGame();
             }
             triggerHaptic();
         }
 
         function clickMinesCell(cell, idx) {
-            if (!minesActive || cell.classList.contains('opened-gem') || cell.classList.contains('opened-mine')) return;
-            triggerHaptic();
-
+            if (!minesActive || cell.classList.contains('opened-gem')) return;
             if (minesPos.includes(idx)) {
                 cell.className = 'mines-cell opened-mine'; cell.innerHTML = '💥';
-                alert('Взрыв! Ставка сгорела.');
-                endMinesGame(false);
+                alert('Бомба! Ставка проиграна.'); endMinesGame();
             } else {
                 cell.className = 'mines-cell opened-gem'; cell.innerHTML = '💎';
                 openedCells++;
@@ -526,195 +798,24 @@
                 document.getElementById('mines-current-coef').innerText = `x${coef}`;
                 document.getElementById('mines-current-profit').innerText = `${Math.floor(curMinesBet * coef)} AC`;
             }
+            triggerHaptic();
         }
 
-        function endMinesGame(win) {
+        function endMinesGame() {
             minesActive = false;
             document.querySelectorAll('.mines-cell').forEach((c, i) => {
                 c.classList.add('disabled');
-                if (minesPos.includes(i)) { if(c.innerHTML !== '💥') c.innerHTML = '💣'; }
+                if (minesPos.includes(i) && c.innerHTML !== '💥') c.innerHTML = '💣';
             });
             const btn = document.getElementById('btn-mines-action');
             btn.innerText = 'Играть'; btn.style.background = 'var(--accent-color)';
-            document.getElementById('mines-bet').disabled = false;
-            document.getElementById('mines-count').disabled = false;
         }
 
-        // --- ЛОГИКА И АНИМАЦИЯ ИГРЫ КРАШ (САМОЛЕТИК) ---
-        function openCrashGame() {
-            document.getElementById('modes-selection').style.display = 'none';
-            document.getElementById('crash-game-screen').style.display = 'block';
-            resetCrashUI();
-        }
-
-        function closeCrashGame() {
-            if (crashActive) return alert('Самолет еще в полете!');
-            document.getElementById('crash-game-screen').style.display = 'none';
-            document.getElementById('modes-selection').style.display = 'block';
-        }
-
-        function resetCrashUI() {
-            document.getElementById('crash-multiplier-display').innerText = 'x1.00';
-            document.getElementById('crash-multiplier-display').style.color = '#ffffff';
-            document.getElementById('crash-motivation').innerText = 'Приготовьтесь к взлету!';
-            document.getElementById('crash-motivation').style.color = 'var(--gold)';
-            const plane = document.getElementById('plane-icon');
-            plane.style.display = 'none';
-            plane.style.left = '20px';
-            plane.style.bottom = '20px';
-        }
-
-        // Генерация точки падения (алгоритм краш-игр)
-        function generateCrashPoint() {
-            let e = Math.random();
-            if (e < 0.03) return 1.00; // 3% шанс мгновенного краша
-            return parseFloat((0.97 / (1 - Math.random())).toFixed(2));
-        }
-
-        function handleCrashAction() {
-            const btn = document.getElementById('btn-crash-action');
-            
-            if (!crashActive && crashState !== "flying") {
-                // СТАРТ ИГРЫ
-                const betInput = document.getElementById('crash-bet');
-                const betValue = parseInt(betInput.value);
-                if (isNaN(betValue) || betValue < 10 || betValue > balance) return alert('Проверьте баланс и ставку!');
-
-                balance -= betValue; updateBalanceUI();
-                
-                // Сброс параметров сессии
-                crashActive = true;
-                crashState = "flying";
-                curCrashBet = betValue;
-                currentCoef = 1.00;
-                playerCashedOut = false;
-                playerWinAmount = 0;
-                finalCashedCoef = 0;
-                targetCrashPoint = generateCrashPoint();
-
-                betInput.disabled = true;
-                btn.innerText = 'Забрать';
-                btn.style.background = 'var(--gold)';
-                btn.style.color = '#000000';
-
-                // Показываем самолетик
-                const plane = document.getElementById('plane-icon');
-                plane.style.display = 'block';
-                plane.style.left = '20px';
-                plane.style.bottom = '20px';
-                document.getElementById('crash-motivation').innerText = 'Самолет набирает высоту...';
-                document.getElementById('crash-motivation').style.color = 'var(--text-muted)';
-
-                // Средняя, комфортная скорость нарастания коэффициента
-                let startTime = Date.now();
-                crashLoopInterval = setInterval(() => {
-                    let elapsed = (Date.now() - startTime) / 1000;
-                    
-                    // Средний темп роста
-                    currentCoef = parseFloat((1.00 + Math.pow(elapsed, 1.2) * 0.08).toFixed(2));
-
-                    // Движение самолетика вверх и вправо по синусоидальной траектории
-                    let targetLeft = 20 + (elapsed * 15);
-                    let targetBottom = 20 + (Math.pow(elapsed, 1.1) * 10);
-                    
-                    if (targetLeft > 260) targetLeft = 260;
-                    if (targetBottom > 130) targetBottom = 130;
-
-                    plane.style.left = `${targetLeft}px`;
-                    plane.style.bottom = `${targetBottom}px`;
-
-                    if (currentCoef >= targetCrashPoint) {
-                        // КРАШ (ВЗРЫВ)
-                        currentCoef = targetCrashPoint; // Корректируем под точную точку
-                        triggerCrash();
-                    } else {
-                        // Обновляем иксы на экране
-                        document.getElementById('crash-multiplier-display').innerText = `x${currentCoef.toFixed(2)}`;
-                    }
-                }, 50);
-
-            } else if (crashState === "flying" && !playerCashedOut) {
-                // КЭШАУТ ВО ВРЕМЯ ПОЛЕТА
-                playerCashedOut = true;
-                finalCashedCoef = currentCoef;
-                playerWinAmount = Math.floor(curCrashBet * finalCashedCoef);
-                
-                balance += playerWinAmount;
-                updateBalanceUI();
-
-                if (finalCashedCoef > maxCoef) {
-                    maxCoef = finalCashedCoef;
-                    document.getElementById('profile-max-coef').innerText = `x${maxCoef}`;
-                }
-
-                // Кнопка становится зеленой, сигнализируя об успешном кэшауте
-                btn.innerText = 'Забрано!';
-                btn.style.background = 'rgba(0, 255, 135, 0.2)';
-                btn.style.color = 'var(--accent-color)';
-                btn.disabled = true;
-
-                document.getElementById('crash-motivation').innerText = `Вы забрали ${playerWinAmount} AC!`;
-                document.getElementById('crash-motivation').style.color = 'var(--accent-color)';
-                triggerHaptic();
-            }
-        }
-
-        function triggerCrash() {
-            clearInterval(crashLoopInterval);
-            crashState = "crashed";
-            
-            document.getElementById('crash-multiplier-display').innerText = `Завершено x${targetCrashPoint.toFixed(2)}`;
-            document.getElementById('crash-multiplier-display').style.color = 'var(--crash-color)';
-            
-            const plane = document.getElementById('plane-icon');
-            plane.innerHTML = '💥'; // Эффект взрыва
-
-            // Динамический расчет упущенной выгоды
-            const motivationText = document.getElementById('crash-motivation');
-            if (playerCashedOut) {
-                // Если игрок забрал деньги, но самолет полетел дальше
-                let potentialMaxProfit = Math.floor(curCrashBet * targetCrashPoint);
-                let lostProfit = potentialMaxProfit - playerWinAmount;
-                
-                if (lostProfit > 0) {
-                    motivationText.innerText = `Вы могли бы заработать на ${lostProfit.toLocaleString()} AC больше!`;
-                } else {
-                    motivationText.innerText = `Идеальный тайминг! Вы зафиксировали максимум.`;
-                }
-                motivationText.style.color = 'var(--gold)';
-            } else {
-                // Если игрок взорвался вместе с самолетом
-                motivationText.innerText = `Вы упустили прибыль! Самолет долетел до x${targetCrashPoint.toFixed(2)}`;
-                motivationText.style.color = 'var(--crash-color)';
-            }
-
-            // Через 2.5 секунды сбрасываем арену для новой игры
-            setTimeout(() => {
-                if (crashState === "crashed") {
-                    crashActive = false;
-                    crashState = "idle";
-                    plane.innerHTML = '🚀';
-                    resetCrashUI();
-                    
-                    const btn = document.getElementById('btn-crash-action');
-                    btn.disabled = false;
-                    btn.innerText = 'Взлет';
-                    btn.style.background = 'var(--crash-color)';
-                    btn.style.color = 'white';
-                    document.getElementById('crash-bet').disabled = false;
-                }
-            }, 2800);
-        }
-
-        // МЕНЮ НАВИГАЦИИ
+        /* --- ОБЩАЯ СИСТЕМА И НАВИГАЦИЯ --- */
         function switchTab(screenId, element) {
-            if (minesActive || crashActive) {
-                alert('Нельзя выйти во время активной игры!');
-                return;
-            }
-            document.querySelectorAll('.content-screen').forEach(screen => screen.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            
+            if (crashActive || minesActive) return alert('Нельзя переключаться во время игры!');
+            document.querySelectorAll('.content-screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(`screen-${screenId}`).classList.add('active');
             element.classList.add('active');
             triggerHaptic();
